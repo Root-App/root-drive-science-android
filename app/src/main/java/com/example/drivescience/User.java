@@ -1,19 +1,32 @@
 package com.example.drivescience;
 
-public class User {
-    private String rootDriverToken;
+import android.content.Context;
+import android.content.SharedPreferences;
 
-    public User() {}
+public class User {
+    String TOKEN = "token";
+
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
+
+    public User(Context context) {
+        preferences = context.getSharedPreferences(
+                context.getString(R.string.user_preferences),
+                context.MODE_PRIVATE
+        );
+        editor = preferences.edit();
+    }
 
     public String getRootDriverToken() {
-        return rootDriverToken;
+        return preferences.getString(TOKEN, null);
     }
 
     public boolean hasRootDriverToken() {
-        return rootDriverToken != null && !rootDriverToken.isEmpty();
+        return getRootDriverToken() != null && !getRootDriverToken().isEmpty();
     }
 
     public void setRootDriverToken(String token) {
-        rootDriverToken = token;
+        editor.putString(TOKEN, token);
+        editor.commit();
     }
 }
