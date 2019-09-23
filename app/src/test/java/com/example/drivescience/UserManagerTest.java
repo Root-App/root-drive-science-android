@@ -12,21 +12,31 @@ import org.robolectric.RobolectricTestRunner;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
-public class UserTest {
+public class UserManagerTest {
 
-    private User subject;
+    private UserManager subject;
 
     @Before
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();
-        subject = new User(context);
+        subject = new UserManager(context);
     }
 
     @Test
-    public void hasRootDriverToken() {
+    public void testRootHasDriverToken() {
         assertFalse(subject.hasRootDriverToken());
 
         subject.setRootDriverToken("a token");
         assertTrue(subject.hasRootDriverToken());
+    }
+
+    @Test
+    public void testClearRootDriverToken() {
+        subject.setRootDriverToken("original token");
+        assertTrue(subject.hasRootDriverToken());
+
+        subject.clearRootDriverToken();
+        assertFalse(subject.hasRootDriverToken());
+
     }
 }
