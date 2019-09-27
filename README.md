@@ -1,6 +1,6 @@
-#Drive Science Testing Apps
+# Drive Science Testing Apps
 
-##Run the app on a test Android device
+## Run the app on a test Android device
 
 https://developer.android.com/studio/debug
 
