@@ -13,11 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.joinroot.roottriptracking.RootTripTracking;
-import com.joinroot.roottriptracking.environment.Environment;
-import com.joinroot.roottriptracking.environment.IDriverTokenHandler;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String CLIENT_ID = "a6d818d5-d6c0-40da-9bca-41d454f946c5";
     private UserManager userManager;
     private Button newUser;
     private Button existingUser;
@@ -44,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         userManager = new UserManager(getApplicationContext());
         if (userManager.hasRootDriverToken()) {
+            RootTripTracking.getInstance().setDriverToken(getApplicationContext(), userManager.getRootDriverToken());
             existingUser.setVisibility(View.VISIBLE);
             textView.setText(userManager.getRootDriverToken());
             textView.setVisibility(View.VISIBLE);
@@ -53,48 +53,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 userManager.clearRootDriverToken();
-                initializeTripTracking();
+                RootTripTracking.getInstance().getDriverToken(getApplicationContext(), new RootTripTracking.IDriverTokenRequestHandler() {
+                    @Override
+                    public void onSuccess(String token) {
+                        userManager.setRootDriverToken(token);
+                        textView.setText(userManager.getRootDriverToken());
+                        existingUser.setVisibility(View.VISIBLE);
+                        textView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure() {}
+                });
             }
         });
 
         existingUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initializeTripTracking();
+                RootTripTracking.getInstance().setDriverToken(getApplicationContext(), userManager.getRootDriverToken());
             }
         });
-    }
-
-    void initializeTripTracking() {
-        RootTripTracking.getInstance().initialize(getApplicationContext(), new IDriverTokenHandler() {
-            @Override
-            public String getClientId() {
-                return "c2d32e9c-48d9-40b6-9eea-0b507775e443";
-            }
-
-            @Override
-            public boolean hasDriverToken() {
-                return userManager.hasRootDriverToken();
-            }
-
-            @Override
-            public String getDriverToken() {
-                return userManager.getRootDriverToken();
-            }
-
-            @Override
-            public void setDriverToken(String token) {
-                userManager.setRootDriverToken(token);
-                textView.setText(userManager.getRootDriverToken());
-                existingUser.setVisibility(View.VISIBLE);
-                textView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onFailure() {
-
-            }
-        }, Environment.LOCAL);
-
     }
 }
