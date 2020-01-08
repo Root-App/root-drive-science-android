@@ -16,10 +16,8 @@ import com.joinroot.roottriptracking.RootTripTracking;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String CLIENT_ID = "a6d818d5-d6c0-40da-9bca-41d454f946c5";
-    private UserManager userManager;
+    public static final String CLIENT_ID = "t56482015d476dd7434f7da4b";
     private Button newUser;
-    private Button existingUser;
     private TextView textView;
 
     @Override
@@ -38,41 +36,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         newUser = findViewById(R.id.newUser);
-        existingUser = findViewById(R.id.existingUser);
         textView = findViewById(R.id.authToken);
 
-        userManager = new UserManager(getApplicationContext());
-        if (userManager.hasRootDriverToken()) {
-            RootTripTracking.getInstance().setDriverToken(getApplicationContext(), userManager.getRootDriverToken());
-            existingUser.setVisibility(View.VISIBLE);
-            textView.setText(userManager.getRootDriverToken());
-            textView.setVisibility(View.VISIBLE);
+        RootTripTracking.getInstance().initialize(this, CLIENT_ID);
+
+        String token = RootTripTracking.getInstance().getCurrentAccessToken();
+        if (token != null) {
+            updateViews();
+            RootTripTracking.getInstance().activate(this);
+        } else {
+            generateAccessToken();
         }
 
         newUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userManager.clearRootDriverToken();
-                RootTripTracking.getInstance().getDriverToken(getApplicationContext(), new RootTripTracking.IDriverTokenRequestHandler() {
-                    @Override
-                    public void onSuccess(String token) {
-                        userManager.setRootDriverToken(token);
-                        textView.setText(userManager.getRootDriverToken());
-                        existingUser.setVisibility(View.VISIBLE);
-                        textView.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onFailure() {}
-                });
+                generateAccessToken();
             }
         });
+    }
 
-        existingUser.setOnClickListener(new View.OnClickListener() {
+    public void generateAccessToken() {
+        RootTripTracking.getInstance().generateAccessToken(new RootTripTracking.IDriverTokenRequestHandler() {
             @Override
-            public void onClick(View view) {
-                RootTripTracking.getInstance().setDriverToken(getApplicationContext(), userManager.getRootDriverToken());
+            public void onSuccess(String newToken) {
+                setAccessTokenAndActivate(newToken);
+                updateViews();
+            }
+
+            @Override
+            public void onFailure() {
+                textView.setText("Could not acquire token.");
+                textView.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public void setAccessTokenAndActivate(String token) {
+        RootTripTracking.getInstance().setAccessToken(token);
+        RootTripTracking.getInstance().activate(this);
+    }
+
+    public void updateViews() {
+        textView.setText(RootTripTracking.getInstance().getCurrentAccessToken());
+        textView.setVisibility(View.VISIBLE);
     }
 }
