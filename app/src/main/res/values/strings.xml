@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">Drive Science</string>
-    <string name="user_preferences">user_preferences</string>
     <string name="new_user">New User</string>
-    <string name="existing_user">Existing User</string>
 </resources>
