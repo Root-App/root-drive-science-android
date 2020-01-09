@@ -57,27 +57,16 @@ public class MainActivity extends AppCompatActivity {
             setButtonStateShouldBeActive();
         }
 
-        generateToken.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                generateAccessToken();
-            }
+        generateToken.setOnClickListener(view -> generateAccessToken());
+
+        startTracking.setOnClickListener(view -> {
+            RootTripTracking.getInstance().activate(getApplicationContext());
+            setButtonStateShouldBeActive();
         });
 
-        startTracking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RootTripTracking.getInstance().activate(getApplicationContext());
-                setButtonStateShouldBeActive();
-            }
-        });
-
-        stopTracking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RootTripTracking.getInstance().deactivate(getApplicationContext());
-                setButtonStateDeactivated();
-            }
+        stopTracking.setOnClickListener(view -> {
+            RootTripTracking.getInstance().deactivate(getApplicationContext());
+            setButtonStateDeactivated();
         });
     }
 
