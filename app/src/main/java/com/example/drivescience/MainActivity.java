@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Button startTracking;
     private Button stopTracking;
     private TextView textView;
+    private TextView eventLog;
 
     @Override
     protected void onStart() {
@@ -44,10 +45,14 @@ public class MainActivity extends AppCompatActivity {
         startTracking = findViewById(R.id.startTracking);
         stopTracking = findViewById(R.id.stopTracking);
         textView = findViewById(R.id.authToken);
+        eventLog = findViewById(R.id.eventLog);
 
         buttonStateManager = new ButtonStateManager(generateToken, startTracking, stopTracking);
 
         RootTripTracking.getInstance().initialize(this, CLIENT_ID);
+
+        TripLifecycleResponder tripLifecycleResponder = new TripLifecycleResponder(eventLog);
+        RootTripTracking.getInstance().setTripLifecycleHandler(tripLifecycleResponder);
 
         String token = RootTripTracking.getInstance().getCurrentAccessToken();
         if (token != null) {
