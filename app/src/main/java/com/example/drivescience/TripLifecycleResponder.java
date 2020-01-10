@@ -14,11 +14,11 @@ public class TripLifecycleResponder implements ITripLifecycleHandler {
 
     @Override
     public void onTripStarted(String tripId) {
-        eventLog.setText(eventLog.getText() + "Trip " + tripId + " started\n");
+        eventLog.setText(String.format("%sTrip %s started\n", eventLog.getText(), tripId));
     }
 
     @Override
     public void onTripEnded(String tripId) {
-        eventLog.setText(eventLog.getText() + "Trip " + tripId + " ended\n");
+        eventLog.setText(String.format("%sTrip %s ended\n", eventLog.getText(), tripId));
     }
 }
