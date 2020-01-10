@@ -17,6 +17,9 @@ import com.joinroot.roottriptracking.RootTripTracking;
 public class MainActivity extends AppCompatActivity {
 
     public static final String CLIENT_ID = "t56482015d476dd7434f7da4b";
+
+    private ButtonStateManager buttonStateManager;
+
     private Button generateToken;
     private Button startTracking;
     private Button stopTracking;
@@ -42,31 +45,33 @@ public class MainActivity extends AppCompatActivity {
         stopTracking = findViewById(R.id.stopTracking);
         textView = findViewById(R.id.authToken);
 
+        buttonStateManager = new ButtonStateManager(generateToken, startTracking, stopTracking);
+
         RootTripTracking.getInstance().initialize(this, CLIENT_ID);
 
         String token = RootTripTracking.getInstance().getCurrentAccessToken();
         if (token != null) {
             textView.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
             textView.setVisibility(View.VISIBLE);
-            setButtonStateHasToken();
+            buttonStateManager.setButtonStateHasToken();
         } else {
-            setButtonStateNoToken();
+            buttonStateManager.setButtonStateNoToken();
         }
 
         if (RootTripTracking.getInstance().shouldReactivate()) {
-            setButtonStateShouldBeActive();
+            buttonStateManager.setButtonStateShouldBeActive();
         }
 
         generateToken.setOnClickListener(view -> generateAccessToken());
 
         startTracking.setOnClickListener(view -> {
             RootTripTracking.getInstance().activate(getApplicationContext());
-            setButtonStateShouldBeActive();
+            buttonStateManager.setButtonStateShouldBeActive();
         });
 
         stopTracking.setOnClickListener(view -> {
             RootTripTracking.getInstance().deactivate(getApplicationContext());
-            setButtonStateDeactivated();
+            buttonStateManager.setButtonStateHasToken();
         });
     }
 
@@ -77,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 RootTripTracking.getInstance().setAccessToken(newToken);
                 textView.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
                 textView.setVisibility(View.VISIBLE);
-                setButtonStateHasToken();
+                buttonStateManager.setButtonStateHasToken();
             }
 
             @Override
@@ -86,29 +91,5 @@ public class MainActivity extends AppCompatActivity {
                 textView.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    public void setButtonStateNoToken() {
-        startTracking.setEnabled(false);
-        stopTracking.setEnabled(false);
-        generateToken.setEnabled(true);
-    }
-
-    public void setButtonStateHasToken() {
-        startTracking.setEnabled(true);
-        stopTracking.setEnabled(false);
-        generateToken.setEnabled(true);
-    }
-
-    public void setButtonStateDeactivated() {
-        startTracking.setEnabled(true);
-        stopTracking.setEnabled(false);
-        generateToken.setEnabled(true);
-    }
-
-    public void setButtonStateShouldBeActive() {
-        startTracking.setEnabled(false);
-        stopTracking.setEnabled(true);
-        generateToken.setEnabled(false);
     }
 }
