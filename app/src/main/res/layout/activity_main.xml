@@ -7,38 +7,55 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/newUser"
+        android:id="@+id/generateToken"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/new_user"
+        android:text="@string/generate_token"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="New User" />
+        app:layout_constraintVertical_bias="0.196"
+        tools:text="Generate and Set New Token" />
 
     <Button
-        android:id="@+id/existingUser"
+        android:id="@+id/stopTracking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/existing_user"
-        android:visibility="gone"
+        android:text="@string/stop_tracking"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.854"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.622"
-        tools:text="Existing User" />
+        app:layout_constraintVertical_bias="0.317" />
+
+    <Button
+        android:id="@+id/startTracking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/start_tracking"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.317" />
 
     <TextView
         android:id="@+id/authToken"
@@ -50,8 +67,32 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newUser"
+        app:layout_constraintTop_toBottomOf="@+id/generateToken"
+        app:layout_constraintVertical_bias="0.258"
         tools:visibility="gone" />
+
+    <EditText
+        android:id="@+id/eventLog"
+        android:layout_width="360dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="148dp"
+        android:layout_marginEnd="32dp"
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
+        android:duplicateParentState="false"
+        android:editable="false"
+        android:ems="10"
+        android:gravity="start|top"
+        android:lines="10"
+        android:padding="5dp"
+        android:singleLine="false"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stopTracking" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

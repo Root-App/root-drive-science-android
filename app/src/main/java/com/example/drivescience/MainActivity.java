@@ -16,11 +16,15 @@ import com.joinroot.roottriptracking.RootTripTracking;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String CLIENT_ID = "a6d818d5-d6c0-40da-9bca-41d454f946c5";
-    private UserManager userManager;
-    private Button newUser;
-    private Button existingUser;
+    public static final String CLIENT_ID = "t56482015d476dd7434f7da4b";
+
+    private ButtonStateManager buttonStateManager;
+
+    private Button generateToken;
+    private Button startTracking;
+    private Button stopTracking;
     private TextView textView;
+    private TextView eventLog;
 
     @Override
     protected void onStart() {
@@ -37,41 +41,59 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        newUser = findViewById(R.id.newUser);
-        existingUser = findViewById(R.id.existingUser);
+        generateToken = findViewById(R.id.generateToken);
+        startTracking = findViewById(R.id.startTracking);
+        stopTracking = findViewById(R.id.stopTracking);
         textView = findViewById(R.id.authToken);
+        eventLog = findViewById(R.id.eventLog);
 
-        userManager = new UserManager(getApplicationContext());
-        if (userManager.hasRootDriverToken()) {
-            RootTripTracking.getInstance().setDriverToken(getApplicationContext(), userManager.getRootDriverToken());
-            existingUser.setVisibility(View.VISIBLE);
-            textView.setText(userManager.getRootDriverToken());
+        buttonStateManager = new ButtonStateManager(generateToken, startTracking, stopTracking);
+
+        RootTripTracking.getInstance().initialize(this, CLIENT_ID);
+
+        TripLifecycleResponder tripLifecycleResponder = new TripLifecycleResponder(eventLog);
+        RootTripTracking.getInstance().setTripLifecycleHandler(tripLifecycleResponder);
+
+        String token = RootTripTracking.getInstance().getCurrentAccessToken();
+        if (token != null) {
+            textView.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
             textView.setVisibility(View.VISIBLE);
+            buttonStateManager.setButtonStateHasToken();
+        } else {
+            buttonStateManager.setButtonStateNoToken();
         }
 
-        newUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                userManager.clearRootDriverToken();
-                RootTripTracking.getInstance().getDriverToken(getApplicationContext(), new RootTripTracking.IDriverTokenRequestHandler() {
-                    @Override
-                    public void onSuccess(String token) {
-                        userManager.setRootDriverToken(token);
-                        textView.setText(userManager.getRootDriverToken());
-                        existingUser.setVisibility(View.VISIBLE);
-                        textView.setVisibility(View.VISIBLE);
-                    }
+        if (RootTripTracking.getInstance().shouldReactivate()) {
+            buttonStateManager.setButtonStateShouldBeActive();
+        }
 
-                    @Override
-                    public void onFailure() {}
-                });
-            }
+        generateToken.setOnClickListener(view -> generateAccessToken());
+
+        startTracking.setOnClickListener(view -> {
+            RootTripTracking.getInstance().activate(getApplicationContext());
+            buttonStateManager.setButtonStateShouldBeActive();
         });
 
-        existingUser.setOnClickListener(new View.OnClickListener() {
+        stopTracking.setOnClickListener(view -> {
+            RootTripTracking.getInstance().deactivate(getApplicationContext());
+            buttonStateManager.setButtonStateHasToken();
+        });
+    }
+
+    public void generateAccessToken() {
+        RootTripTracking.getInstance().generateAccessToken(new RootTripTracking.IDriverTokenRequestHandler() {
             @Override
-            public void onClick(View view) {
-                RootTripTracking.getInstance().setDriverToken(getApplicationContext(), userManager.getRootDriverToken());
+            public void onSuccess(String newToken) {
+                RootTripTracking.getInstance().setAccessToken(newToken);
+                textView.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
+                textView.setVisibility(View.VISIBLE);
+                buttonStateManager.setButtonStateHasToken();
+            }
+
+            @Override
+            public void onFailure() {
+                textView.setText("Could not acquire token.");
+                textView.setVisibility(View.VISIBLE);
             }
         });
     }
