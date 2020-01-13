@@ -11,6 +11,5 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        RootTripTracking.getInstance().initialize(getApplicationContext(), CLIENT_ID, Environment.LOCAL);
     }
 }
