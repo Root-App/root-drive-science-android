@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void generateAccessToken() {
+        textView.setText("Requesting token...");
         RootTripTracking.getInstance().generateAccessToken(new RootTripTracking.IDriverTokenRequestHandler() {
             @Override
             public void onSuccess(String newToken) {
