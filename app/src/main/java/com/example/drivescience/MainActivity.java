@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private Button generateToken;
     private Button startTracking;
     private Button stopTracking;
+    private Button clearLog;
     private TextView textView;
     private TextView eventLog;
 
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         generateToken = findViewById(R.id.generateToken);
         startTracking = findViewById(R.id.startTracking);
         stopTracking = findViewById(R.id.stopTracking);
+        clearLog = findViewById(R.id.clearLog);
         textView = findViewById(R.id.authToken);
         eventLog = findViewById(R.id.eventLog);
 
@@ -78,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
             RootTripTracking.getInstance().deactivate(getApplicationContext());
             buttonStateManager.setButtonStateHasToken();
         });
+
+        clearLog.setOnClickListener(view -> eventLog.setText(""));
     }
 
     public void generateAccessToken() {
