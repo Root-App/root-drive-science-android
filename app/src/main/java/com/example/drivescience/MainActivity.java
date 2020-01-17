@@ -24,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
     private Button startTracking;
     private Button stopTracking;
     private Button clearLog;
-    private TextView textView;
+    private TextView authToken;
     private TextView eventLog;
+    private TextView tripTrackerVersion;
 
     @Override
     protected void onStart() {
@@ -46,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
         startTracking = findViewById(R.id.startTracking);
         stopTracking = findViewById(R.id.stopTracking);
         clearLog = findViewById(R.id.clearLog);
-        textView = findViewById(R.id.authToken);
+        authToken = findViewById(R.id.authToken);
         eventLog = findViewById(R.id.eventLog);
+        tripTrackerVersion = findViewById(R.id.tripTrackerVersion);
 
         buttonStateManager = new ButtonStateManager(generateToken, startTracking, stopTracking);
 
@@ -58,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         String token = RootTripTracking.getInstance().getCurrentAccessToken();
         if (token != null) {
-            textView.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
-            textView.setVisibility(View.VISIBLE);
+            authToken.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
+            authToken.setVisibility(View.VISIBLE);
             buttonStateManager.setButtonStateHasToken();
         } else {
             buttonStateManager.setButtonStateNoToken();
@@ -82,23 +84,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
         clearLog.setOnClickListener(view -> eventLog.setText(""));
+
+        tripTrackerVersion.setText(String.format("Trip Tracker version: %s", com.joinroot.roottriptracking.BuildConfig.SDK_VERSION));
     }
 
     public void generateAccessToken() {
-        textView.setText("Requesting token...");
+        authToken.setText("Requesting token...");
         RootTripTracking.getInstance().generateAccessToken(new RootTripTracking.IDriverTokenRequestHandler() {
             @Override
             public void onSuccess(String newToken) {
                 RootTripTracking.getInstance().setAccessToken(newToken);
-                textView.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
-                textView.setVisibility(View.VISIBLE);
+                authToken.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
+                authToken.setVisibility(View.VISIBLE);
                 buttonStateManager.setButtonStateHasToken();
             }
 
             @Override
             public void onFailure() {
-                textView.setText("Could not acquire token.");
-                textView.setVisibility(View.VISIBLE);
+                authToken.setText("Could not acquire token.");
+                authToken.setVisibility(View.VISIBLE);
             }
         });
     }
