@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.joinroot.roottriptracking.RootTripTracking;
+import com.joinroot.roottriptracking.environment.Environment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttonStateManager = new ButtonStateManager(generateToken, startTracking, stopTracking);
 
-        RootTripTracking.getInstance().initialize(this, CLIENT_ID);
+        RootTripTracking.getInstance().initialize(this, CLIENT_ID, Environment.STAGING);
 
         TripLifecycleResponder tripLifecycleResponder = new TripLifecycleResponder(eventLog);
         RootTripTracking.getInstance().setTripLifecycleHandler(tripLifecycleResponder);
