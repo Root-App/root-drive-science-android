@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.joinroot.roottriptracking.BuildConfig;
 import com.joinroot.roottriptracking.RootTripTracking;
 import com.joinroot.roottriptracking.environment.Environment;
 
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         clearLog.setOnClickListener(view -> eventLog.setText(""));
 
-        tripTrackerVersion.setText(String.format("Trip Tracker version: %s", com.joinroot.roottriptracking.BuildConfig.SDK_VERSION));
+        tripTrackerVersion.setText(String.format("Trip Tracker version: %s-%s", BuildConfig.FLAVOR, com.joinroot.roottriptracking.BuildConfig.SDK_VERSION));
     }
 
     public void generateAccessToken() {
