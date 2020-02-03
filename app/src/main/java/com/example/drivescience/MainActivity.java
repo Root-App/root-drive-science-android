@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -16,19 +18,30 @@ import com.joinroot.roottriptracking.BuildConfig;
 import com.joinroot.roottriptracking.RootTripTracking;
 import com.joinroot.roottriptracking.environment.Environment;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
 
-    public static final String CLIENT_ID = "t56482015d476dd7434f7da4b";
+    private static final String PREFERENCES_KEY = "Root-demo-preferences";
+    private static final String ACTIVE_PHONE_PREFERENCE = "activePhoneNumber";
+    private static final String ACTIVE_DRIVER_ID_PREFERENCE = "activeDriverId";
+
+    public static final String CLIENT_ID = "d2ca8c3d33b7985c4b8d0fc8f";
 
     private ButtonStateManager buttonStateManager;
 
-    private Button generateToken;
+    private Button confirmNumber;
     private Button startTracking;
     private Button stopTracking;
     private Button clearLog;
-    private TextView authToken;
+
+    private TextView activeDriverIdView;
+    private TextView activePhoneNumberView;
     private TextView eventLog;
+    private TextView phoneInput;
     private TextView tripTrackerVersion;
+
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onStart() {
@@ -45,44 +58,59 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        generateToken = findViewById(R.id.generateToken);
+        confirmNumber = findViewById(R.id.confirmNumber);
         startTracking = findViewById(R.id.startTracking);
         stopTracking = findViewById(R.id.stopTracking);
         clearLog = findViewById(R.id.clearLog);
-        authToken = findViewById(R.id.authToken);
+
+        activeDriverIdView = findViewById(R.id.activeDriverId);
+        activePhoneNumberView = findViewById(R.id.activePhoneNumber);
         eventLog = findViewById(R.id.eventLog);
+        phoneInput = findViewById(R.id.phoneInput);
         tripTrackerVersion = findViewById(R.id.tripTrackerVersion);
 
-        buttonStateManager = new ButtonStateManager(generateToken, startTracking, stopTracking);
+        buttonStateManager = new ButtonStateManager(confirmNumber, startTracking, stopTracking);
+        sharedPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         RootTripTracking.getInstance().initialize(this, CLIENT_ID, Environment.STAGING);
 
         TripLifecycleResponder tripLifecycleResponder = new TripLifecycleResponder(eventLog);
         RootTripTracking.getInstance().setTripLifecycleHandler(tripLifecycleResponder);
 
-        String token = RootTripTracking.getInstance().getCurrentAccessToken();
-        if (token != null) {
-            authToken.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
-            authToken.setVisibility(View.VISIBLE);
-            buttonStateManager.setButtonStateHasToken();
+        Boolean hasToken = RootTripTracking.getInstance().hasAccessToken();
+        String activePhoneNumber = sharedPreferences.getString(ACTIVE_PHONE_PREFERENCE, "");
+        String activeDriverId = sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, "");
+
+        if (activeDriverId != "") {
+            activeDriverIdView.setText("Active Driver ID: " + activeDriverId);
+            activeDriverIdView.setVisibility(View.VISIBLE);
+
+            activePhoneNumberView.setText("Active Phone Number: " + activePhoneNumber);
+            activePhoneNumberView.setVisibility(View.VISIBLE);
+
+            if (hasToken) {
+                buttonStateManager.setButtonStateCanStartTracking();
+            } else {
+                buttonStateManager.setButtonStateCannotStartTracking();
+            }
         } else {
-            buttonStateManager.setButtonStateNoToken();
+            buttonStateManager.setButtonStateCannotStartTracking();
         }
 
         if (RootTripTracking.getInstance().shouldReactivate()) {
-            buttonStateManager.setButtonStateShouldBeActive();
+            buttonStateManager.setButtonStateShouldBeTracking();
         }
 
-        generateToken.setOnClickListener(view -> generateAccessToken());
+        confirmNumber.setOnClickListener(view -> setActivePhoneNumber());
 
         startTracking.setOnClickListener(view -> {
-            RootTripTracking.getInstance().activate(getApplicationContext());
-            buttonStateManager.setButtonStateShouldBeActive();
+            RootTripTracking.getInstance().activate(getApplicationContext(), activeDriverId);
+            buttonStateManager.setButtonStateShouldBeTracking();
         });
 
         stopTracking.setOnClickListener(view -> {
             RootTripTracking.getInstance().deactivate(getApplicationContext());
-            buttonStateManager.setButtonStateHasToken();
+            buttonStateManager.setButtonStateCanStartTracking();
         });
 
         clearLog.setOnClickListener(view -> eventLog.setText(""));
@@ -90,21 +118,25 @@ public class MainActivity extends AppCompatActivity {
         tripTrackerVersion.setText(String.format("Trip Tracker version: %s-%s", BuildConfig.FLAVOR, com.joinroot.roottriptracking.BuildConfig.SDK_VERSION));
     }
 
-    public void generateAccessToken() {
-        authToken.setText("Requesting token...");
-        RootTripTracking.getInstance().generateAccessToken(new RootTripTracking.IDriverTokenRequestHandler() {
+    private void setActivePhoneNumber() {
+        String phoneNumber = phoneInput.getText().toString();
+        HashMap<String, String> driver = new HashMap<String, String>();
+        driver.put("phone_number", phoneNumber);
+
+        RootTripTracking.getInstance().createDriver(driver, new RootTripTracking.ICreateDriverRequestHandler() {
             @Override
-            public void onSuccess(String newToken) {
-                RootTripTracking.getInstance().setAccessToken(newToken);
-                authToken.setText("Current token: " + RootTripTracking.getInstance().getCurrentAccessToken());
-                authToken.setVisibility(View.VISIBLE);
-                buttonStateManager.setButtonStateHasToken();
+            public void onSuccess(String driverId) {
+                activeDriverIdView.setText("Active Driver ID: " + driverId);
+                activeDriverIdView.setVisibility(View.VISIBLE);
+                activePhoneNumberView.setText("Active Phone Number: " + phoneNumber);
+                activePhoneNumberView.setVisibility(View.VISIBLE);
+                phoneInput.setText("");
             }
 
             @Override
             public void onFailure() {
-                authToken.setText("Could not acquire token.");
-                authToken.setVisibility(View.VISIBLE);
+                activePhoneNumberView.setText("");
+                activeDriverIdView.setText("");
             }
         });
     }

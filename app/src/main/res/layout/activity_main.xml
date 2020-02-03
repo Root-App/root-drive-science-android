@@ -7,21 +7,20 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/generateToken"
+        android:id="@+id/confirmNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="@string/generate_token"
+        android:text="@string/confirm_number"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1"
-        tools:text="Generate and Set New Token" />
+        app:layout_constraintVertical_bias="0.136" />
 
     <Button
         android:id="@+id/stopTracking"
@@ -37,8 +36,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintTop_toTopOf="@id/activePhoneNumber"
+        app:layout_constraintVertical_bias="0.05" />
 
     <Button
         android:id="@+id/startTracking"
@@ -54,23 +53,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintTop_toTopOf="@id/activePhoneNumber"
+        app:layout_constraintVertical_bias="0.05" />
 
     <TextView
-        android:id="@+id/authToken"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/activeDriverId"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="640dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/generateToken"
-        app:layout_constraintVertical_bias="0.18"
+        app:layout_constraintTop_toBottomOf="@+id/confirmNumber"
+        app:layout_constraintVertical_bias="0.05"
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/activePhoneNumber"
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="640dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activeDriverId"
+        app:layout_constraintVertical_bias="0.05"
         tools:visibility="gone" />
 
     <EditText
@@ -78,7 +93,7 @@
         android:layout_width="360dp"
         android:layout_height="200dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:background="#FFFFFF"
         android:backgroundTint="#FFFFFF"
@@ -93,7 +108,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stopTracking" />
+        app:layout_constraintTop_toBottomOf="@id/stopTracking" />
 
     <Button
         android:id="@+id/clearLog"
@@ -124,5 +139,25 @@
         app:layout_constraintTop_toBottomOf="@id/clearLog"
         app:layout_constraintVertical_bias="0.5"
         tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/phoneInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="173dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="179dp"
+        android:width="200dp"
+        android:height="32dp"
+        android:backgroundTint="#00FFFFFF"
+        android:fontFamily="sans-serif-medium"
+        android:hint="@string/phone_input_placeholder"
+        android:inputType="phone"
+        android:phoneNumber="true"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
