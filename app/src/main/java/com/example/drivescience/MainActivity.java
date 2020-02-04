@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -83,10 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (activeDriverId != "") {
             activeDriverIdView.setText("Active Driver ID: " + activeDriverId);
-            activeDriverIdView.setVisibility(View.VISIBLE);
 
             activePhoneNumberView.setText("Active Phone Number: " + activePhoneNumber);
-            activePhoneNumberView.setVisibility(View.VISIBLE);
 
             if (hasToken) {
                 buttonStateManager.setButtonStateCanStartTracking();
@@ -94,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
                 buttonStateManager.setButtonStateCannotStartTracking();
             }
         } else {
+            activeDriverIdView.setText("Active Driver ID: not set");
+            activePhoneNumberView.setText("Active Phone Number: not set");
             buttonStateManager.setButtonStateCannotStartTracking();
         }
 
@@ -104,8 +105,15 @@ public class MainActivity extends AppCompatActivity {
         confirmNumber.setOnClickListener(view -> setActivePhoneNumber());
 
         startTracking.setOnClickListener(view -> {
-            RootTripTracking.getInstance().activate(getApplicationContext(), activeDriverId);
-            buttonStateManager.setButtonStateShouldBeTracking();
+            RootTripTracking.getInstance().activate(getApplicationContext(), sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, ""), success -> {
+                if (success) {
+                    eventLog.setText(String.format("%sTrip Tracker successfully activated\n", eventLog.getText()));
+                    buttonStateManager.setButtonStateShouldBeTracking();
+                } else {
+                    eventLog.setText(String.format("%sTrip Tracker failed to successfully activate\n", eventLog.getText()));
+                    buttonStateManager.setButtonStateCanStartTracking();
+                }
+            });
         });
 
         stopTracking.setOnClickListener(view -> {
@@ -126,11 +134,13 @@ public class MainActivity extends AppCompatActivity {
         RootTripTracking.getInstance().createDriver(driver, new RootTripTracking.ICreateDriverRequestHandler() {
             @Override
             public void onSuccess(String driverId) {
+                sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, driverId).commit();
+                sharedPreferences.edit().putString(ACTIVE_PHONE_PREFERENCE, phoneNumber).commit();
+
                 activeDriverIdView.setText("Active Driver ID: " + driverId);
-                activeDriverIdView.setVisibility(View.VISIBLE);
                 activePhoneNumberView.setText("Active Phone Number: " + phoneNumber);
-                activePhoneNumberView.setVisibility(View.VISIBLE);
                 phoneInput.setText("");
+                buttonStateManager.setButtonStateCanStartTracking();
             }
 
             @Override
