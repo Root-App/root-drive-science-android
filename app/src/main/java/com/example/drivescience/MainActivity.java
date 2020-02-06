@@ -10,8 +10,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.View;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -102,19 +103,25 @@ public class MainActivity extends AppCompatActivity {
             buttonStateManager.setButtonStateShouldBeTracking();
         }
 
-        confirmNumber.setOnClickListener(view -> setActivePhoneNumber());
+        phoneInput.addTextChangedListener(MaskPhoneWatcher.getWatcher());
+        phoneInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
-        startTracking.setOnClickListener(view -> {
-            RootTripTracking.getInstance().activate(getApplicationContext(), sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, ""), success -> {
-                if (success) {
-                    eventLog.setText(String.format("%sTrip Tracker successfully activated\n", eventLog.getText()));
-                    buttonStateManager.setButtonStateShouldBeTracking();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (phoneInput.getText().toString().replaceAll("[^0-9]", "").length() >= 10) {
+                    confirmNumber.setEnabled(true);
                 } else {
-                    eventLog.setText(String.format("%sTrip Tracker failed to successfully activate\n", eventLog.getText()));
-                    buttonStateManager.setButtonStateCanStartTracking();
+                    confirmNumber.setEnabled(false);
                 }
-            });
+            }
         });
+
+        confirmNumber.setOnClickListener(view -> setActivePhoneNumber());
 
         startTracking.setOnClickListener(view -> triggerStartTracking());
 
