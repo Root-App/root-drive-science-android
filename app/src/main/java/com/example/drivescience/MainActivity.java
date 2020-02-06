@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
             });
         });
 
+        startTracking.setOnClickListener(view -> triggerStartTracking());
+
         stopTracking.setOnClickListener(view -> {
             RootTripTracking.getInstance().deactivate(getApplicationContext());
             buttonStateManager.setButtonStateCanStartTracking();
@@ -147,6 +149,18 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure() {
                 activePhoneNumberView.setText("");
                 activeDriverIdView.setText("");
+            }
+        });
+    }
+
+    private void triggerStartTracking() {
+        RootTripTracking.getInstance().activate(getApplicationContext(), sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, ""), success -> {
+            if (success) {
+                eventLog.setText(String.format("%sTrip Tracker successfully activated\n", eventLog.getText()));
+                buttonStateManager.setButtonStateShouldBeTracking();
+            } else {
+                eventLog.setText(String.format("%sTrip Tracker failed to successfully activate\n", eventLog.getText()));
+                buttonStateManager.setButtonStateCanStartTracking();
             }
         });
     }
