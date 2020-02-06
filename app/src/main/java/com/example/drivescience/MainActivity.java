@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         phoneInput = findViewById(R.id.phoneInput);
         tripTrackerVersion = findViewById(R.id.tripTrackerVersion);
 
-        buttonStateManager = new ButtonStateManager(confirmNumber, startTracking, stopTracking);
+        buttonStateManager = new ButtonStateManager(startTracking, stopTracking);
         sharedPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         RootTripTracking.getInstance().initialize(this, CLIENT_ID, Environment.STAGING);
