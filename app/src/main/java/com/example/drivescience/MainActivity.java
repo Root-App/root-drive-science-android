@@ -136,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setActivePhoneNumber() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
         String phoneNumber = phoneInput.getText().toString();
         HashMap<String, String> driver = new HashMap<String, String>();
         driver.put("phone_number", phoneNumber);
