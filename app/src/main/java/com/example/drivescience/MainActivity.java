@@ -119,9 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (activeDriverId != "") {
             activeDriverIdView.setText("Active Driver ID: " + activeDriverId);
-
             activePhoneNumberView.setText("Active Phone Number: " + activePhoneNumber);
-
             buttonStateManager.setButtonStateCanStartTracking();
         } else {
             activeDriverIdView.setText("Active Driver ID: not set");
