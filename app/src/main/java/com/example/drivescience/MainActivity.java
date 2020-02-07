@@ -155,10 +155,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure() {
-                activePhoneNumberView.setText("");
-                activeDriverIdView.setText("");
-            }
+            public void onFailure() { }
         });
     }
 
