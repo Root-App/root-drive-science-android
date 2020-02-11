@@ -20,8 +20,6 @@ import com.joinroot.roottriptracking.BuildConfig;
 import com.joinroot.roottriptracking.RootTripTracking;
 import com.joinroot.roottriptracking.environment.Environment;
 
-import java.util.HashMap;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String PREFERENCES_KEY = "Root-demo-preferences";
@@ -127,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             buttonStateManager.setButtonStateCannotStartTracking();
         }
 
-        if (RootTripTracking.getInstance().shouldReactivate()) {
+        if (RootTripTracking.getInstance().configuredToAutoActivate()) {
             buttonStateManager.setButtonStateShouldBeTracking();
         }
     }
@@ -137,10 +135,8 @@ public class MainActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
         String phoneNumber = phoneInput.getText().toString();
-        HashMap<String, String> driver = new HashMap<String, String>();
-        driver.put("phone_number", phoneNumber);
 
-        RootTripTracking.getInstance().createDriver(driver, new RootTripTracking.ICreateDriverRequestHandler() {
+        RootTripTracking.getInstance().createDriver(null, null, phoneNumber, new RootTripTracking.ICreateDriverRequestHandler() {
             @Override
             public void onSuccess(String driverId) {
                 sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, driverId).commit();
@@ -153,17 +149,21 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure() { }
+            public void onFailure(String error) { }
         });
     }
 
     private void triggerStartTracking() {
-        RootTripTracking.getInstance().activate(getApplicationContext(), sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, ""), success -> {
-            if (success) {
+        RootTripTracking.getInstance().activate(getApplicationContext(), sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, ""), new RootTripTracking.ITripTrackingActivateSuccessHandler() {
+            @Override
+            public void onSuccess() {
                 eventLog.setText(String.format("%sTrip Tracker successfully activated\n", eventLog.getText()));
                 buttonStateManager.setButtonStateShouldBeTracking();
-            } else {
-                eventLog.setText(String.format("%sTrip Tracker failed to successfully activate\n", eventLog.getText()));
+            }
+
+            @Override
+            public void onFailure(String error) {
+                eventLog.setText(String.format("%sTrip Tracker failed to successfully activate with error: \n", eventLog.getText(), error));
                 buttonStateManager.setButtonStateCanStartTracking();
             }
         });
