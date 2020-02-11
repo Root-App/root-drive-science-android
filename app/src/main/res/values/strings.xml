@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Drive Science</string>
-    <string name="generate_token">Generate and Set New Token</string>
+    <string name="confirm_number">Use this number</string>
     <string name="start_tracking">Start Tracking</string>
     <string name="stop_tracking">Stop Tracking</string>
     <string name="clear_log">Clear Log</string>
+    <string name="phone_input_label">Phone number:</string>
+    <string name="phone_input_placeholder">(___) ___-____</string>
 </resources>
