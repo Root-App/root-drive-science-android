@@ -3,31 +3,26 @@ package com.example.drivescience;
 import android.widget.Button;
 
 public class ButtonStateManager {
-    private Button generateToken;
     private Button startTracking;
     private Button stopTracking;
 
-    public ButtonStateManager(Button generateToken, Button startTracking, Button stopTracking) {
-        this.generateToken = generateToken;
+    public ButtonStateManager(Button startTracking, Button stopTracking) {
         this.startTracking = startTracking;
         this.stopTracking = stopTracking;
     }
 
-    public void setButtonStateNoToken() {
+    public void setButtonStateCannotStartTracking() {
         startTracking.setEnabled(false);
         stopTracking.setEnabled(false);
-        generateToken.setEnabled(true);
     }
 
-    public void setButtonStateHasToken() {
+    public void setButtonStateCanStartTracking() {
         startTracking.setEnabled(true);
         stopTracking.setEnabled(false);
-        generateToken.setEnabled(true);
     }
 
-    public void setButtonStateShouldBeActive() {
+    public void setButtonStateShouldBeTracking() {
         startTracking.setEnabled(false);
         stopTracking.setEnabled(true);
-        generateToken.setEnabled(false);
     }
 }
