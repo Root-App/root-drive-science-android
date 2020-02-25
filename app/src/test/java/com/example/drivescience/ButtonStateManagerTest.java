@@ -27,29 +27,26 @@ public class ButtonStateManagerTest {
         generateToken = new Button(context);
         startTracking = new Button(context);
         stopTracking = new Button(context);
-        subject = new ButtonStateManager(generateToken, startTracking, stopTracking);
+        subject = new ButtonStateManager(startTracking, stopTracking);
     }
 
     @Test
-    public void testSetButtonStateNoToken() {
-        subject.setButtonStateNoToken();
-        assertTrue(generateToken.isEnabled());
+    public void testSetButtonStateCannotStartTracking() {
+        subject.setButtonStateCannotStartTracking();
         assertFalse(startTracking.isEnabled());
         assertFalse(stopTracking.isEnabled());
     }
 
     @Test
-    public void testSetButtonStateHasToken() {
-        subject.setButtonStateHasToken();
-        assertTrue(generateToken.isEnabled());
+    public void testSetButtonStateCanStartTracking() {
+        subject.setButtonStateCanStartTracking();
         assertTrue(startTracking.isEnabled());
         assertFalse(stopTracking.isEnabled());
     }
 
     @Test
-    public void testSetButtonStateShouldBeActive() {
-        subject.setButtonStateShouldBeActive();
-        assertFalse(generateToken.isEnabled());
+    public void testSetButtonStateShouldBeTracking() {
+        subject.setButtonStateShouldBeTracking();
         assertFalse(startTracking.isEnabled());
         assertTrue(stopTracking.isEnabled());
     }
