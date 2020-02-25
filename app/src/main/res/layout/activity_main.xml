@@ -106,6 +106,8 @@
         android:gravity="start|top"
         android:lines="10"
         android:padding="5dp"
+        android:scrollbarSize="10dp"
+        android:scrollbars="vertical"
         android:singleLine="false"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
