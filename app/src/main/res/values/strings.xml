@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name" translatable="false">DS - Kotlin</string>
+    <string name="title" translatable="false">Drive Science Demo</string>
+
+    <string name="driver_registered_negative" translatable="false">No Driver Registered</string>
+    <string name="driver_registered_affirmitive" translatable="false">Driver Registered</string>
+    <string name="registered_driver_format" translatable="false">Driver ID: %1$s</string>
+
+    <string name="input_driver_id_label" translatable="false">Driver ID</string>
+
+    <string name="register_driver_button" translatable="false">Register Driver</string>
+    <string name="register_driver_button_clear" translatable="false">Clear Registered Driver</string>
+
+
+    <string name="activation_switch_label" translatable="false">Trip Tracking Activated</string>
+
+    <string name="clear">Clear</string>
+    <string name="copy">Copy</string>
+
+    <string name="version_footer" translatable="false">Trip Tracker version: %1$s</string>
+
+</resources>

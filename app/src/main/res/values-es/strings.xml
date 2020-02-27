@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DS - Kotlin</string>
+    <string name="title">Drive Science Demo</string>
+
+    <string name="driver_registered_negative">No Driver Registered</string>
+    <string name="driver_registered_affirmitive">Driver Registered</string>
+    <string name="registered_driver_format">Driver ID: %1$s</string>
+
+    <string name="input_driver_id_label">Driver ID</string>
+
+    <string name="register_driver_button">Register Driver</string>
+    <string name="register_driver_button_clear">Clear Registered Driver</string>
+
+    <string name="clear">Eliminar</string>
+    <string name="copy">Copiar</string>
+
+</resources>
