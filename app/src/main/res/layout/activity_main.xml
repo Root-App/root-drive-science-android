@@ -6,16 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/confirmNumber"
+    <ToggleButton
+        android:id="@+id/clearOrRegisterDriver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:width="250dp"
         android:enabled="true"
-        android:text="@string/confirm_number"
+        android:textOff="@string/register_driver"
+        android:textOn="@string/clear_driver"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/confirmNumber"
+        app:layout_constraintTop_toTopOf="@id/clearOrRegisterDriver"
         app:layout_constraintVertical_bias="0.25" />
 
     <Button
@@ -54,7 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/confirmNumber"
+        app:layout_constraintTop_toTopOf="@id/clearOrRegisterDriver"
         app:layout_constraintVertical_bias="0.25" />
 
     <TextView
@@ -71,7 +73,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirmNumber"
+        app:layout_constraintTop_toBottomOf="@+id/clearOrRegisterDriver"
         app:layout_constraintVertical_bias="0.05"
         tools:visibility="gone" />
 
@@ -142,7 +144,7 @@
         android:editable="true"
         android:fontFamily="sans-serif-medium"
         android:hint="@string/driver_id_input_placeholder"
-        android:inputType="text"
+        android:inputType="textNoSuggestions"
         android:maxLength="50"
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
@@ -151,7 +153,7 @@
         android:phoneNumber="true"
         android:textAlignment="center"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/confirmNumber"
+        app:layout_constraintBottom_toTopOf="@+id/clearOrRegisterDriver"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
