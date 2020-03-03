@@ -10,11 +10,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.joinroot.roottriptracking.BuildConfig;
 import com.joinroot.roottriptracking.RootTripTracking;
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ButtonStateManager buttonStateManager;
 
-    private Button confirmNumber;
+    private ToggleButton clearOrRegisterDriver;
     private Button startTracking;
     private Button stopTracking;
     private Button clearLog;
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        confirmNumber = findViewById(R.id.confirmNumber);
+        clearOrRegisterDriver = findViewById(R.id.clearOrRegisterDriver);
         startTracking = findViewById(R.id.startTracking);
         stopTracking = findViewById(R.id.stopTracking);
         clearLog = findViewById(R.id.clearLog);
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         initializeTripTrackerAndSetButtonState();
 
-        confirmNumber.setOnClickListener(view -> setActiveDriverId());
+        clearOrRegisterDriver.setOnClickListener(view -> setActiveDriverId());
 
         startTracking.setOnClickListener(view -> triggerStartTracking());
 
@@ -94,16 +93,15 @@ public class MainActivity extends AppCompatActivity {
         String activeDriverId = sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, "");
 
         if (activeDriverId != "") {
-            activeDriverIdView.setText("Active Driver ID: " + activeDriverId);
+            activeDriverIdView.setText("Driver Registered\nDriver ID: " + activeDriverId);
 
             driverIdInput.setText(activeDriverId);
             driverIdInput.setEnabled(false);
-
-            confirmNumber.setText("Clear Registered Driver");
+            clearOrRegisterDriver.setChecked(true);
 
             buttonStateManager.setButtonStateCanStartTracking();
         } else {
-            activeDriverIdView.setText("Active Driver ID: not set");
+            activeDriverIdView.setText("No Driver Registered");
             buttonStateManager.setButtonStateCannotStartTracking();
         }
 
@@ -114,22 +112,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void setActiveDriverId() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        if(getCurrentFocus() != null) {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
 
-        String driverId = driverIdInput.getText().toString();
+        if (clearOrRegisterDriver.isChecked()) {
+            String driverId = driverIdInput.getText().toString();
 
-        RootTripTracking.getInstance().createDriver(driverId, null, null, new RootTripTracking.ICreateDriverRequestHandler() {
-            @Override
-            public void onSuccess(String driverId) {
-                sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, driverId).commit();
+            RootTripTracking.getInstance().createDriver(driverId, null, null, new RootTripTracking.ICreateDriverRequestHandler() {
+                @Override
+                public void onSuccess(String driverId) {
+                    sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, driverId).commit();
 
-                activeDriverIdView.setText("Active Driver ID: " + driverId);
-                buttonStateManager.setButtonStateCanStartTracking();
-            }
+                    driverIdInput.setText(driverId);
+                    driverIdInput.setEnabled(false);
 
-            @Override
-            public void onFailure(String error) { }
-        });
+                    activeDriverIdView.setText("Driver Registered\nDriver ID: " + driverId);
+                    buttonStateManager.setButtonStateCanStartTracking();
+                }
+
+                @Override
+                public void onFailure(String error) {
+                }
+            });
+        } else {
+            RootTripTracking.getInstance().deactivate(getApplicationContext());
+            sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, "").commit();
+            activeDriverIdView.setText("No Driver Registered");
+            buttonStateManager.setButtonStateCannotStartTracking();
+
+            driverIdInput.setText("");
+            driverIdInput.setEnabled(true);
+        }
     }
 
     private void triggerStartTracking() {
