@@ -6,7 +6,8 @@ import com.joinroot.roottriptracking.environment.Environment
 import com.joinroot.roottriptracking.services.ITripLifecycleHandler
 import kotlinx.android.synthetic.main.activity_main.*
 
-val MainActivity.tripTracker: RootTripTracking by lazy { RootTripTracking.getInstance() }
+val MainActivity.tripTracker: RootTripTracking
+    get()= RootTripTracking.getInstance()
 
 fun MainActivity.showVersionText() {
     versionText.text = getString(R.string.version_footer, BuildConfig.SDK_VERSION)
@@ -47,6 +48,7 @@ fun MainActivity.createDriver(driverId: String) {
                 appendLog("Driver registered!")
             } else {
                 hideRegisteredDriver()
+                appendLog("Error: Unknown error registering driver.")
             }
         }
     })

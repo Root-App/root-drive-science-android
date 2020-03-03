@@ -1,13 +1,18 @@
 package com.joinroot.kotlindemo
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
+
 // https://kotlinlang.org/docs/tutorials/android-plugin.html
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +41,20 @@ class MainActivity : AppCompatActivity() {
         resumeIfConfigured()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menu?.add( 1, "Unregister Driver")
+        menu?.add( 2, "Share log")
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            1 -> unregisterDriver()
+            2 -> shareLog()
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun setupInitialState() {
         showVersionText()
         if (registeredDriverId != null) {
@@ -61,7 +80,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun appendLog(message: String) {
-        logText.append("\n" + message)
+        logText.append("\n$message")
+    }
+
+    /*************************/
+    // Menu Actions
+    /*************************/
+
+    fun shareLog(): Boolean {
+        if (logText.text.isEmpty()) {
+            Toast.makeText(this, "Log is empty!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, logText.text)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+        return true
+    }
+
+    fun unregisterDriver(): Boolean {
+        appendLog("Unregistering driver")
+        deactivate()
+        registeredDriverId = null
+        hideRegisteredDriver()
+
+        return true
     }
 
     /*************************/
@@ -73,6 +122,7 @@ class MainActivity : AppCompatActivity() {
         // create driver
         if (driverIdInput.text.isNotEmpty()) {
             createDriver(driverIdInput.text.toString())
+            driverIdInput.text.clear()
             hideKeyboard(this)
         } else {
             Toast.makeText(this, "Unable to register driver without ID!", Toast.LENGTH_SHORT).show()
