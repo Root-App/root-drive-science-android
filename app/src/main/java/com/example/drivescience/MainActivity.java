@@ -92,16 +92,12 @@ public class MainActivity extends AppCompatActivity {
 
         String activeDriverId = sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, "");
 
+        updateDriverIdUi(activeDriverId);
+
         if (activeDriverId != "") {
-            activeDriverIdView.setText("Driver Registered\nDriver ID: " + activeDriverId);
-
-            driverIdInput.setText(activeDriverId);
-            driverIdInput.setEnabled(false);
             clearOrRegisterDriver.setChecked(true);
-
             buttonStateManager.setButtonStateCanStartTracking();
         } else {
-            activeDriverIdView.setText("No Driver Registered");
             buttonStateManager.setButtonStateCannotStartTracking();
         }
 
@@ -124,10 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(String driverId) {
                     sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, driverId).commit();
 
-                    driverIdInput.setText(driverId);
-                    driverIdInput.setEnabled(false);
-
-                    activeDriverIdView.setText("Driver Registered\nDriver ID: " + driverId);
+                    updateDriverIdUi(driverId);
                     buttonStateManager.setButtonStateCanStartTracking();
                 }
 
@@ -138,11 +131,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             RootTripTracking.getInstance().deactivate(getApplicationContext());
             sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, "").commit();
-            activeDriverIdView.setText("No Driver Registered");
             buttonStateManager.setButtonStateCannotStartTracking();
 
-            driverIdInput.setText("");
-            driverIdInput.setEnabled(true);
+            updateDriverIdUi("");
         }
     }
 
@@ -160,5 +151,17 @@ public class MainActivity extends AppCompatActivity {
                 buttonStateManager.setButtonStateCanStartTracking();
             }
         });
+    }
+
+    private void updateDriverIdUi(String driverId) {
+        driverIdInput.setText(driverId);
+
+        if (driverId != "") {
+            activeDriverIdView.setText("Driver Registered\nDriver ID: " + driverId);
+            driverIdInput.setEnabled(false);
+        } else {
+            activeDriverIdView.setText("No Driver Registered");
+            driverIdInput.setEnabled(true);
+        }
     }
 }
