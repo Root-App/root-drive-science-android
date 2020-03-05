@@ -1,24 +1,22 @@
 package com.example.drivescience;
 
-import android.widget.TextView;
-
 import com.joinroot.roottriptracking.services.ITripLifecycleHandler;
 
 public class TripLifecycleResponder implements ITripLifecycleHandler {
 
-    private TextView eventLog;
+    private LogManager logManager;
 
-    public TripLifecycleResponder(TextView log) {
-        eventLog = log;
+    public TripLifecycleResponder(LogManager logManager) {
+        this.logManager = logManager;
     }
 
     @Override
     public void onTripStarted(String tripId) {
-        eventLog.setText(String.format("%sTrip %s started\n", eventLog.getText(), tripId));
+        logManager.addToLog(String.format("Trip %s started", tripId));
     }
 
     @Override
     public void onTripEnded(String tripId) {
-        eventLog.setText(String.format("%sTrip %s ended\n", eventLog.getText(), tripId));
+        logManager.addToLog(String.format("Trip %s ended", tripId));
     }
 }
