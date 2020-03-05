@@ -10,8 +10,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -26,11 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String CLIENT_ID = "my-client-id";
 
-    private ButtonStateManager buttonStateManager;
-
     private ToggleButton clearOrRegisterDriver;
-    private Button startTracking;
-    private Button stopTracking;
+    private Switch tripTrackingActivation;
     private Button clearLog;
 
     private TextView activeDriverIdView;
@@ -56,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         clearOrRegisterDriver = findViewById(R.id.clearOrRegisterDriver);
-        startTracking = findViewById(R.id.startTracking);
-        stopTracking = findViewById(R.id.stopTracking);
+        tripTrackingActivation = findViewById(R.id.tripTrackingActivation);
         clearLog = findViewById(R.id.clearLog);
 
         activeDriverIdView = findViewById(R.id.activeDriverId);
@@ -65,19 +63,12 @@ public class MainActivity extends AppCompatActivity {
         driverIdInput = findViewById(R.id.driverIdInput);
         tripTrackerVersion = findViewById(R.id.tripTrackerVersion);
 
-        buttonStateManager = new ButtonStateManager(startTracking, stopTracking);
         sharedPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
 
         initializeTripTrackerAndSetButtonState();
 
         clearOrRegisterDriver.setOnClickListener(view -> setActiveDriverId());
-
-        startTracking.setOnClickListener(view -> triggerStartTracking());
-
-        stopTracking.setOnClickListener(view -> {
-            RootTripTracking.getInstance().deactivate(getApplicationContext());
-            buttonStateManager.setButtonStateCanStartTracking();
-        });
+        tripTrackingActivation.setOnCheckedChangeListener((view, isChecked) -> setTripTrackingActivation());
 
         clearLog.setOnClickListener(view -> eventLog.setText(""));
 
@@ -96,13 +87,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (activeDriverId != "") {
             clearOrRegisterDriver.setChecked(true);
-            buttonStateManager.setButtonStateCanStartTracking();
-        } else {
-            buttonStateManager.setButtonStateCannotStartTracking();
+            tripTrackingActivation.setVisibility(View.VISIBLE);
         }
 
         if (RootTripTracking.getInstance().configuredToAutoActivate()) {
-            buttonStateManager.setButtonStateShouldBeTracking();
+            tripTrackingActivation.setChecked(true);
         }
     }
 
@@ -121,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, driverId).commit();
 
                     updateDriverIdUi(driverId);
-                    buttonStateManager.setButtonStateCanStartTracking();
+                    tripTrackingActivation.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -131,26 +120,40 @@ public class MainActivity extends AppCompatActivity {
         } else {
             RootTripTracking.getInstance().deactivate(getApplicationContext());
             sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, "").commit();
-            buttonStateManager.setButtonStateCannotStartTracking();
+            tripTrackingActivation.setChecked(false);
+            tripTrackingActivation.setVisibility(View.INVISIBLE);
 
             updateDriverIdUi("");
         }
     }
 
-    private void triggerStartTracking() {
+    private void setTripTrackingActivation() {
+        if (tripTrackingActivation.isChecked()) {
+            activateTripTracking();
+        } else {
+            deactivateTripTracking();
+        }
+    }
+
+    private void activateTripTracking() {
         RootTripTracking.getInstance().activate(getApplicationContext(), sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, ""), new RootTripTracking.ITripTrackingActivateSuccessHandler() {
             @Override
             public void onSuccess() {
                 eventLog.setText(String.format("%sTrip Tracker successfully activated\n", eventLog.getText()));
-                buttonStateManager.setButtonStateShouldBeTracking();
+                tripTrackingActivation.setChecked(true);
             }
 
             @Override
             public void onFailure(String error) {
                 eventLog.setText(String.format("%sTrip Tracker failed to successfully activate with error: \n", eventLog.getText(), error));
-                buttonStateManager.setButtonStateCanStartTracking();
+                tripTrackingActivation.setChecked(false);
             }
         });
+    }
+
+    private void deactivateTripTracking() {
+        RootTripTracking.getInstance().deactivate(getApplicationContext());
+        tripTrackingActivation.setChecked(false);
     }
 
     private void updateDriverIdUi(String driverId) {
