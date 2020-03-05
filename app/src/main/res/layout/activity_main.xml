@@ -13,51 +13,39 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:width="250dp"
         android:enabled="true"
         android:textOff="@string/register_driver"
         android:textOn="@string/clear_driver"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.136" />
+        app:layout_constraintTop_toBottomOf="@+id/driverIdInput" />
 
     <Button
         android:id="@+id/stopTracking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
         android:text="@string/stop_tracking"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.85"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/clearOrRegisterDriver"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintStart_toEndOf="@+id/startTracking"
+        app:layout_constraintTop_toBottomOf="@+id/clearOrRegisterDriver" />
 
     <Button
         android:id="@+id/startTracking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:text="@string/start_tracking"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/clearOrRegisterDriver"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintTop_toBottomOf="@+id/clearOrRegisterDriver" />
 
     <TextView
         android:id="@+id/activeDriverId"
@@ -65,25 +53,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="640dp"
+        android:height="50dp"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
         android:textIsSelectable="true"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clearOrRegisterDriver"
-        app:layout_constraintVertical_bias="0.05"
-        tools:visibility="gone" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/eventLog"
         android:layout_width="360dp"
         android:layout_height="200dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
         android:background="#FFFFFF"
         android:backgroundTint="#FFFFFF"
         android:duplicateParentState="false"
@@ -95,53 +80,43 @@
         android:scrollbarSize="10dp"
         android:scrollbars="vertical"
         android:singleLine="false"
-        android:textSize="16sp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/tripTrackerVersion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stopTracking" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/clearLog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="160dp"
+        android:layout_width="84dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/clear_log"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventLog" />
+        app:layout_constraintBottom_toTopOf="@id/eventLog"
+        app:layout_constraintEnd_toEndOf="@id/eventLog" />
 
     <TextView
         android:id="@+id/tripTrackerVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:textIsSelectable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/clearLog"
-        app:layout_constraintVertical_bias="0.25"
-        tools:visibility="gone" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/driverIdInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="173dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="179dp"
-        android:layout_marginBottom="33dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="173dp"
         android:width="300dp"
         android:background="#FFFFFF"
         android:backgroundTint="#FFFFFF"
         android:clickable="true"
         android:cursorVisible="true"
-        android:editable="true"
         android:fontFamily="sans-serif-medium"
         android:hint="@string/driver_id_input_placeholder"
         android:inputType="textNoSuggestions"
@@ -150,26 +125,20 @@
         android:paddingTop="5dp"
         android:paddingRight="5dp"
         android:paddingBottom="5dp"
-        android:phoneNumber="true"
         android:textAlignment="center"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/clearOrRegisterDriver"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@id/driverIdInputLabel" />
 
     <TextView
         android:id="@+id/driverIdInputLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="100dp"
         android:text="@string/driver_id_input_label"
-        app:layout_constraintBottom_toTopOf="@+id/driverIdInput"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
