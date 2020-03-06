@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ToggleButton clearOrRegisterDriver;
     private Switch tripTrackingActivation;
+    private Button copyLog;
     private Button clearLog;
 
     private TextView activeDriverIdView;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         clearOrRegisterDriver = findViewById(R.id.clearOrRegisterDriver);
         tripTrackingActivation = findViewById(R.id.tripTrackingActivation);
+        copyLog = findViewById(R.id.copyLog);
         clearLog = findViewById(R.id.clearLog);
 
         activeDriverIdView = findViewById(R.id.activeDriverId);
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         clearOrRegisterDriver.setOnClickListener(view -> setActiveDriverId());
         tripTrackingActivation.setOnCheckedChangeListener((view, isChecked) -> setTripTrackingActivation());
 
+        copyLog.setOnClickListener(view -> logManager.copyLogToClipboard(this));
         clearLog.setOnClickListener(view -> logManager.clearLog());
 
         tripTrackerVersion.setText(String.format("Trip Tracker version: %s-%s", BuildConfig.FLAVOR, com.joinroot.roottriptracking.BuildConfig.SDK_VERSION));
