@@ -42,6 +42,7 @@
         android:layout_width="360dp"
         android:layout_height="200dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="200dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
         android:background="#FFFFFF"
@@ -59,7 +60,8 @@
         app:layout_constraintBottom_toTopOf="@id/tripTrackerVersion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clearOrRegisterDriver" />
 
     <Button
         android:id="@+id/clearLog"
@@ -84,11 +86,13 @@
         android:id="@+id/tripTrackerVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
         android:textIsSelectable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventLog" />
 
     <EditText
         android:id="@+id/driverIdInput"
