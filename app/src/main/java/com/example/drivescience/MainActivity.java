@@ -30,14 +30,16 @@ public class MainActivity extends AppCompatActivity {
 
     private ToggleButton clearOrRegisterDriver;
     private Switch tripTrackingActivation;
+    private Button copyLog;
     private Button clearLog;
 
     private TextView activeDriverIdView;
-    private TextView eventLog;
     private TextView driverIdInput;
     private TextView tripTrackerVersion;
 
     private SharedPreferences sharedPreferences;
+
+    private LogManager logManager;
 
     @Override
     protected void onStart() {
@@ -56,21 +58,24 @@ public class MainActivity extends AppCompatActivity {
 
         clearOrRegisterDriver = findViewById(R.id.clearOrRegisterDriver);
         tripTrackingActivation = findViewById(R.id.tripTrackingActivation);
+        copyLog = findViewById(R.id.copyLog);
         clearLog = findViewById(R.id.clearLog);
 
         activeDriverIdView = findViewById(R.id.activeDriverId);
-        eventLog = findViewById(R.id.eventLog);
         driverIdInput = findViewById(R.id.driverIdInput);
         tripTrackerVersion = findViewById(R.id.tripTrackerVersion);
 
         sharedPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        logManager = new LogManager(this, findViewById(R.id.eventLog));
 
         initializeTripTrackerAndSetButtonState();
 
         clearOrRegisterDriver.setOnClickListener(view -> setActiveDriverId());
         tripTrackingActivation.setOnCheckedChangeListener((view, isChecked) -> setTripTrackingActivation());
 
-        clearLog.setOnClickListener(view -> eventLog.setText(""));
+        copyLog.setOnClickListener(view -> logManager.copyLogToClipboard(this));
+        clearLog.setOnClickListener(view -> logManager.clearLog());
 
         tripTrackerVersion.setText(String.format("Trip Tracker version: %s-%s", BuildConfig.FLAVOR, com.joinroot.roottriptracking.BuildConfig.SDK_VERSION));
     }
@@ -78,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
     private void initializeTripTrackerAndSetButtonState() {
         RootTripTracking.getInstance().initialize(this, CLIENT_ID, Environment.STAGING);
 
-        TripLifecycleResponder tripLifecycleResponder = new TripLifecycleResponder(eventLog);
+        TripLifecycleResponder tripLifecycleResponder = new TripLifecycleResponder(logManager);
         RootTripTracking.getInstance().setTripLifecycleHandler(tripLifecycleResponder);
 
         String activeDriverId = sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, "");
 
-        updateDriverIdUi(activeDriverId);
+        updateDriverIdUi();
 
         if (activeDriverId != "") {
             clearOrRegisterDriver.setChecked(true);
@@ -108,13 +113,15 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(String driverId) {
                     sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, driverId).commit();
+                    updateDriverIdUi();
 
-                    updateDriverIdUi(driverId);
+                    logManager.addToLog(String.format("Registered driver with id: %s", driverId));
                     tripTrackingActivation.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onFailure(String error) {
+                    logManager.addToLog(String.format("Failed to register driver with error: %s", error));
                 }
             });
         } else {
@@ -123,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             tripTrackingActivation.setChecked(false);
             tripTrackingActivation.setVisibility(View.INVISIBLE);
 
-            updateDriverIdUi("");
+            updateDriverIdUi();
         }
     }
 
@@ -139,13 +146,13 @@ public class MainActivity extends AppCompatActivity {
         RootTripTracking.getInstance().activate(getApplicationContext(), sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, ""), new RootTripTracking.ITripTrackingActivateSuccessHandler() {
             @Override
             public void onSuccess() {
-                eventLog.setText(String.format("%sTrip Tracker successfully activated\n", eventLog.getText()));
+                logManager.addToLog("Trip Tracker activated");
                 tripTrackingActivation.setChecked(true);
             }
 
             @Override
             public void onFailure(String error) {
-                eventLog.setText(String.format("%sTrip Tracker failed to successfully activate with error: \n", eventLog.getText(), error));
+                logManager.addToLog(String.format("Trip Tracker failed to activate with error: %s", error));
                 tripTrackingActivation.setChecked(false);
             }
         });
@@ -153,10 +160,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void deactivateTripTracking() {
         RootTripTracking.getInstance().deactivate(getApplicationContext());
+        logManager.addToLog("Trip Tracker deactivated");
         tripTrackingActivation.setChecked(false);
     }
 
-    private void updateDriverIdUi(String driverId) {
+    private void updateDriverIdUi() {
+        String driverId = sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, "");
         driverIdInput.setText(driverId);
 
         if (driverId != "") {
