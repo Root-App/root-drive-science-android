@@ -11,10 +11,12 @@ import java.time.format.DateTimeFormatter;
 
 public class LogManager {
 
+    private ClipboardManager clipboard;
     private TextView eventLog;
 
-    public LogManager(TextView eventLog) {
+    public LogManager(Context context, TextView eventLog) {
         this.eventLog = eventLog;
+        this.clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
     public void addToLog(String string) {
@@ -29,7 +31,6 @@ public class LogManager {
     }
 
     public void copyLogToClipboard(Context context) {
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData logText = ClipData.newPlainText("Trip Tracker log", eventLog.getText());
         clipboard.setPrimaryClip(logText);
         Toast.makeText(context, "Copied!", Toast.LENGTH_SHORT).show();

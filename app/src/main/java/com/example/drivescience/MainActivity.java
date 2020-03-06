@@ -21,7 +21,6 @@ import com.joinroot.roottriptracking.BuildConfig;
 import com.joinroot.roottriptracking.RootTripTracking;
 import com.joinroot.roottriptracking.environment.Environment;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String PREFERENCES_KEY = "Root-demo-preferences";
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = this.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-        logManager = new LogManager(findViewById(R.id.eventLog));
+        logManager = new LogManager(this, findViewById(R.id.eventLog));
 
         initializeTripTrackerAndSetButtonState();
 
