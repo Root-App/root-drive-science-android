@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         String activeDriverId = sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, "");
 
-        updateDriverIdUi(activeDriverId);
+        updateDriverIdUi();
 
         if (activeDriverId != "") {
             clearOrRegisterDriver.setChecked(true);
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(String driverId) {
                     sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, driverId).commit();
 
-                    updateDriverIdUi(driverId);
+                    updateDriverIdUi();
                     tripTrackingActivation.setVisibility(View.VISIBLE);
                 }
 
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
             tripTrackingActivation.setChecked(false);
             tripTrackingActivation.setVisibility(View.INVISIBLE);
 
-            updateDriverIdUi("");
+            updateDriverIdUi();
         }
     }
 
@@ -160,7 +160,8 @@ public class MainActivity extends AppCompatActivity {
         tripTrackingActivation.setChecked(false);
     }
 
-    private void updateDriverIdUi(String driverId) {
+    private void updateDriverIdUi() {
+        String driverId = sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, "");
         driverIdInput.setText(driverId);
 
         if (driverId != "") {
