@@ -114,13 +114,15 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(String driverId) {
                     sharedPreferences.edit().putString(ACTIVE_DRIVER_ID_PREFERENCE, driverId).commit();
-
                     updateDriverIdUi();
+
+                    logManager.addToLog(String.format("Registered driver with id: %s", driverId));
                     tripTrackingActivation.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onFailure(String error) {
+                    logManager.addToLog(String.format("Failed to register driver with error: %s", error));
                 }
             });
         } else {
