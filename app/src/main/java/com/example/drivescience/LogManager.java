@@ -1,6 +1,10 @@
 package com.example.drivescience;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,5 +26,12 @@ public class LogManager {
 
     public void clearLog() {
         eventLog.setText("");
+    }
+
+    public void copyLogToClipboard(Context context) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData logText = ClipData.newPlainText("Trip Tracker log", eventLog.getText());
+        clipboard.setPrimaryClip(logText);
+        Toast.makeText(context, "Copied!", Toast.LENGTH_SHORT).show();
     }
 }
