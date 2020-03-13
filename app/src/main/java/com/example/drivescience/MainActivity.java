@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -82,6 +84,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeTripTrackerAndSetButtonState() {
         RootTripTracking.getInstance().initialize(this, CLIENT_ID, Environment.STAGING);
+
+        Intent trackingIntent = new Intent(this, MainActivity.class);
+        PendingIntent trackingActivity = PendingIntent.getActivity(this, 0, trackingIntent, 0);
+
+        Notification trackingNotification = new Notification.Builder(this, "demo_app_channel")
+                .setContentTitle("Drive Science crunching numbers!")
+                .setSmallIcon(R.drawable.ic_driving_notification)
+                .setContentIntent(trackingActivity)
+                .build();
+        RootTripTracking.getInstance().setTrackingNotification(this, trackingNotification, "demo_app_channel");
 
         TripLifecycleResponder tripLifecycleResponder = new TripLifecycleResponder(logManager);
         RootTripTracking.getInstance().setTripLifecycleHandler(tripLifecycleResponder);
