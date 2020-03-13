@@ -88,12 +88,12 @@ public class MainActivity extends AppCompatActivity {
         Intent trackingIntent = new Intent(this, MainActivity.class);
         PendingIntent trackingActivity = PendingIntent.getActivity(this, 0, trackingIntent, 0);
 
-        Notification trackingNotification = new Notification.Builder(this, "root_trip_tracking")
+        Notification trackingNotification = new Notification.Builder(this, "demo_app_channel")
                 .setContentTitle("Drive Science crunching numbers!")
                 .setSmallIcon(R.drawable.ic_driving_notification)
                 .setContentIntent(trackingActivity)
                 .build();
-        RootTripTracking.getInstance().setTrackingNotification(this, trackingNotification, "root_trip_tracking");
+        RootTripTracking.getInstance().setTrackingNotification(this, trackingNotification, "demo_app_channel");
 
         TripLifecycleResponder tripLifecycleResponder = new TripLifecycleResponder(logManager);
         RootTripTracking.getInstance().setTripLifecycleHandler(tripLifecycleResponder);
