@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ToggleButton clearOrRegisterDriver;
     private Switch tripTrackingActivation;
+    private Switch tripTrackingReactivate;
     private Button copyLog;
     private Button clearLog;
 
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         clearOrRegisterDriver = findViewById(R.id.clearOrRegisterDriver);
         tripTrackingActivation = findViewById(R.id.tripTrackingActivation);
+        tripTrackingReactivate = findViewById(R.id.tripTrackingReactivate);
         copyLog = findViewById(R.id.copyLog);
         clearLog = findViewById(R.id.clearLog);
 
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         clearOrRegisterDriver.setOnClickListener(view -> setActiveDriverId());
         tripTrackingActivation.setOnCheckedChangeListener((view, isChecked) -> setTripTrackingActivation());
+        tripTrackingReactivate.setOnCheckedChangeListener((view, isChecked) -> setTripTrackingSuppressAutoActivation());
 
         copyLog.setOnClickListener(view -> logManager.copyLogToClipboard(this));
         clearLog.setOnClickListener(view -> logManager.clearLog());
@@ -107,8 +110,13 @@ public class MainActivity extends AppCompatActivity {
             tripTrackingActivation.setVisibility(View.VISIBLE);
         }
 
-        if (RootTripTracking.getInstance().configuredToAutoActivate()) {
+        if (RootTripTracking.getInstance().isActive()) {
             tripTrackingActivation.setChecked(true);
+            tripTrackingReactivate.setVisibility(View.VISIBLE);
+
+            if (RootTripTracking.getInstance().configuredToAutoActivate()) {
+                tripTrackingReactivate.setChecked(true);
+            }
         }
     }
 
@@ -160,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess() {
                 logManager.addToLog("Trip Tracker activating");
                 tripTrackingActivation.setChecked(true);
+                tripTrackingReactivate.setVisibility(View.VISIBLE);
+                if (RootTripTracking.getInstance().configuredToAutoActivate()) {
+                    tripTrackingReactivate.setChecked(true);
+                }
             }
 
             @Override
@@ -174,6 +186,17 @@ public class MainActivity extends AppCompatActivity {
         logManager.addToLog("Trip Tracker deactivating");
         RootTripTracking.getInstance().deactivate(getApplicationContext());
         tripTrackingActivation.setChecked(false);
+        tripTrackingReactivate.setVisibility(View.INVISIBLE);
+    }
+
+    private void setTripTrackingSuppressAutoActivation() {
+        if (tripTrackingReactivate.isChecked()) {
+            RootTripTracking.getInstance().setSuppressAutoActivation(false);
+            tripTrackingReactivate.setChecked(true);
+        } else {
+            RootTripTracking.getInstance().setSuppressAutoActivation(true);
+            tripTrackingReactivate.setChecked(false);
+        }
     }
 
     private void updateDriverIdUi() {
