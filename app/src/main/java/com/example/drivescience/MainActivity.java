@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         RootTripTracking.getInstance().activate(getApplicationContext(), sharedPreferences.getString(ACTIVE_DRIVER_ID_PREFERENCE, ""), new RootTripTracking.ITripTrackingActivateSuccessHandler() {
             @Override
             public void onSuccess() {
-                logManager.addToLog("Trip Tracker activated");
+                logManager.addToLog("Trip Tracker activating");
                 tripTrackingActivation.setChecked(true);
             }
 
@@ -171,8 +171,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deactivateTripTracking() {
+        logManager.addToLog("Trip Tracker deactivating");
         RootTripTracking.getInstance().deactivate(getApplicationContext());
-        logManager.addToLog("Trip Tracker deactivated");
         tripTrackingActivation.setChecked(false);
     }
 
