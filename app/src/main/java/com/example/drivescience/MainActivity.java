@@ -171,8 +171,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deactivateTripTracking() {
-        RootTripTracking.getInstance().deactivate(getApplicationContext());
         logManager.addToLog("Trip Tracker deactivating");
+        RootTripTracking.getInstance().deactivate(getApplicationContext());
         tripTrackingActivation.setChecked(false);
     }
 
