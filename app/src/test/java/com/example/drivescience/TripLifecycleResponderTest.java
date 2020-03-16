@@ -1,7 +1,9 @@
 package com.example.drivescience;
 
 import android.content.Context;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -21,7 +23,6 @@ public class TripLifecycleResponderTest {
     private TripLifecycleResponder subject;
 
     private TextView eventLog;
-
     private TripInformation exampleTrip;
 
     @Before
@@ -30,7 +31,17 @@ public class TripLifecycleResponderTest {
         eventLog = new TextView(context);
 
         LogManager log = new LogManager(context, eventLog);
-        subject = new TripLifecycleResponder(log);
+        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
+        UIStateManager uiState = new UIStateManager(
+                sharedPreferencesManager,
+                new TextView(context),
+                new TextView(context),
+                new ToggleButton(context),
+                new Switch(context),
+                new Switch(context)
+        );
+
+        subject = new TripLifecycleResponder(log, uiState);
 
         exampleTrip = new TripInformation("some-identifier");
     }
@@ -69,5 +80,4 @@ public class TripLifecycleResponderTest {
         subject.onEvent(event);
         assertTrue(eventLog.getText().toString().contains("Trip some-identifier ended"));
     }
-
 }
