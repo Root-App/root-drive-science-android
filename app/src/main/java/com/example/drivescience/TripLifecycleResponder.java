@@ -4,17 +4,11 @@ import com.joinroot.roottriptracking.lifecycle.ITripTrackerLifecycleHandler;
 import com.joinroot.roottriptracking.lifecycle.TripEvent;
 import com.joinroot.roottriptracking.lifecycle.LifecycleEvent;
 
-import static com.joinroot.roottriptracking.lifecycle.LifecycleEvent.Name.ACTIVATION;
-import static com.joinroot.roottriptracking.lifecycle.LifecycleEvent.Name.DEACTIVATION;
-import static com.joinroot.roottriptracking.lifecycle.LifecycleEvent.Name.TRIP_CANCELED;
-import static com.joinroot.roottriptracking.lifecycle.LifecycleEvent.Name.TRIP_ENDED;
-import static com.joinroot.roottriptracking.lifecycle.LifecycleEvent.Name.TRIP_STARTED;
-
 public class TripLifecycleResponder implements ITripTrackerLifecycleHandler {
 
     private LogManager logManager;
 
-    public TripLifecycleResponder(LogManager logManager) {
+    TripLifecycleResponder(LogManager logManager) {
         this.logManager = logManager;
     }
 

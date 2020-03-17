@@ -5,6 +5,10 @@ import android.widget.TextView;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import com.joinroot.roottriptracking.lifecycle.LifecycleEvent;
+import com.joinroot.roottriptracking.lifecycle.TripEvent;
+import com.joinroot.roottriptracking.lifecycle.models.TripInformation;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,22 +22,52 @@ public class TripLifecycleResponderTest {
 
     private TextView eventLog;
 
+    private TripInformation exampleTrip;
+
     @Before
     public void setUp() {
         Context context = ApplicationProvider.getApplicationContext();
         eventLog = new TextView(context);
-        subject = new TripLifecycleResponder(eventLog);
+
+        LogManager log = new LogManager(context, eventLog);
+        subject = new TripLifecycleResponder(log);
+
+        exampleTrip = new TripInformation("some-identifier");
     }
 
     @Test
-    public void testOnTripStarted() {
-        subject.onTripStarted("trip id");
-        assertTrue(eventLog.getText().toString().contains("trip id started"));
+    public void testOnEvent_Activation() {
+        LifecycleEvent event = new LifecycleEvent(LifecycleEvent.Name.ACTIVATION);
+        subject.onEvent(event);
+        assertTrue(eventLog.getText().toString().contains("Activated!"));
     }
 
     @Test
-    public void testOnTripEnded() {
-        subject.onTripEnded("trip id");
-        assertTrue(eventLog.getText().toString().contains("trip id ended"));
+    public void testOnEvent_Deactivation() {
+        LifecycleEvent event = new LifecycleEvent(LifecycleEvent.Name.DEACTIVATION);
+        subject.onEvent(event);
+        assertTrue(eventLog.getText().toString().contains("Deactivated"));
     }
+
+    @Test
+    public void testOnEvent_TripStarted() {
+        LifecycleEvent event = new TripEvent(LifecycleEvent.Name.TRIP_STARTED, exampleTrip);
+        subject.onEvent(event);
+        assertTrue(eventLog.getText().toString().contains("Trip some-identifier started"));
+    }
+
+    @Test
+    public void testOnEvent_TripCanceled() {
+        LifecycleEvent event = new TripEvent(LifecycleEvent.Name.TRIP_CANCELED, exampleTrip);
+        subject.onEvent(event);
+        assertTrue(eventLog.getText().toString().contains("Trip some-identifier canceled"));
+    }
+
+    @Test
+    public void testOnEvent_TripEnded() {
+        LifecycleEvent event = new TripEvent(LifecycleEvent.Name.TRIP_ENDED, exampleTrip);
+        subject.onEvent(event);
+        assertTrue(eventLog.getText().toString().contains("Trip some-identifier ended"));
+    }
+
 }
