@@ -6,7 +6,6 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private Button copyLog;
     private Button clearLog;
 
-    private TextView activeDriverIdView;
     private TextView driverIdInput;
     private TextView tripTrackerVersion;
 
@@ -59,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         copyLog = findViewById(R.id.copyLog);
         clearLog = findViewById(R.id.clearLog);
 
-        activeDriverIdView = findViewById(R.id.activeDriverId);
         driverIdInput = findViewById(R.id.driverIdInput);
         tripTrackerVersion = findViewById(R.id.tripTrackerVersion);
 
