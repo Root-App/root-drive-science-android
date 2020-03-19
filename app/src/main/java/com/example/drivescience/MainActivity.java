@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         RootTripTracking.getInstance().setTrackingNotification(this, trackingNotification, "demo_app_channel");
 
         TripLifecycleResponder tripLifecycleResponder = new TripLifecycleResponder(logManager, uiStateManager);
-        RootTripTracking.getInstance().setTripLifecycleHandler(tripLifecycleResponder);
+        RootTripTracking.getInstance().setTripTrackerLifecycleHandler(tripLifecycleResponder);
 
         String activeDriverId = sharedPreferencesManager.getActiveDriverIdPreference();
 
