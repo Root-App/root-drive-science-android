@@ -35,14 +35,14 @@ public class UIStateManager {
         if (driverId != "") {
             clearOrRegisterDriver.setChecked(true);
             tripTrackingActivation.setVisibility(View.VISIBLE);
-        }
 
-        if (active) {
-            tripTrackingActivation.setChecked(true);
-            tripTrackingReactivate.setVisibility(View.VISIBLE);
+            if (active) {
+                tripTrackingActivation.setChecked(true);
+                tripTrackingReactivate.setVisibility(View.VISIBLE);
 
-            if (reactivateOnStart) {
-                tripTrackingReactivate.setChecked(true);
+                if (reactivateOnStart) {
+                    tripTrackingReactivate.setChecked(true);
+                }
             }
         }
     }
