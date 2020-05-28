@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+def artifactoryUser = System.getenv('ARTIFACTORY_USERNAME')
+def artifactoryApiKey = System.getenv('ARTIFACTORY_API_KEY')
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -31,25 +34,27 @@ android {
 repositories {
     repositories {
         maven {
-            url "s3://root-maven-repo/releases"
-            authentication {
-                awsIm(AwsImAuthentication)
+                name "Root Enterprise Artifactory"
+                url "https://joinroot.jfrog.io/joinroot/enterprise-sdk"
+                credentials {
+                    username artifactoryUser
+                    password artifactoryApiKey
+                }
             }
-        }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
     api 'androidx.work:work-runtime:2.2.0'
     implementation 'com.mixpanel.android:mixpanel-android:5.6.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-//    implementation 'com.joinroot:root-android-trip-tracker:4.2.0'
-    implementation fileTree(dir: "triptracker", include: ["RootTripTracking-enterprise-release.aar"])
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
-    implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.amazonaws:aws-android-sdk-s3:2.13.4'
+
+    implementation 'com.joinroot:root-enterprise-trip-tracker:20200319.0.1'
+//    implementation fileTree(dir: "triptracker", include: ["RootTripTracking-enterprise-release.aar"])
+
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:4.2.1'
     testImplementation 'androidx.test:core:1.2.0'
