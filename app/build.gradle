@@ -52,7 +52,7 @@ dependencies {
     api 'androidx.work:work-runtime:2.2.0'
     implementation 'com.mixpanel.android:mixpanel-android:5.6.0'
 
-    implementation 'com.joinroot:root-enterprise-trip-tracker:20200319.0.1'
+    implementation 'com.joinroot:root-enterprise-trip-tracker:20200316.2.1'
 //    implementation fileTree(dir: "triptracker", include: ["RootTripTracking-enterprise-release.aar"])
 
     testImplementation 'junit:junit:4.12'
