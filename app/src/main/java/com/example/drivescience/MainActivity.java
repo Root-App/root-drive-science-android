@@ -19,6 +19,7 @@ import android.widget.ToggleButton;
 import com.joinroot.roottriptracking.BuildConfig;
 import com.joinroot.roottriptracking.RootTripTracking;
 import com.joinroot.roottriptracking.environment.Environment;
+import com.joinroot.roottriptracking.utility.PermissionCheck;
 
 public class MainActivity extends AppCompatActivity {
     public static final String CLIENT_ID = "d2ca8c3d33b7985c4b8d0fc8f";
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Switch tripTrackingReactivate;
     private Button copyLog;
     private Button clearLog;
+    private Button checkPermissions;
 
     private TextView driverIdInput;
     private TextView tripTrackerVersion;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         tripTrackingReactivate = findViewById(R.id.tripTrackingReactivate);
         copyLog = findViewById(R.id.copyLog);
         clearLog = findViewById(R.id.clearLog);
+        checkPermissions = findViewById(R.id.permissionsCheckBtn);
 
         driverIdInput = findViewById(R.id.driverIdInput);
         tripTrackerVersion = findViewById(R.id.tripTrackerVersion);
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         copyLog.setOnClickListener(view -> logManager.copyLogToClipboard(this));
         clearLog.setOnClickListener(view -> logManager.clearLog());
+        checkPermissions.setOnClickListener(view -> permissionCheck());
 
         tripTrackerVersion.setText(String.format("Trip Tracker version: %s-%s", BuildConfig.FLAVOR, com.joinroot.roottriptracking.BuildConfig.SDK_VERSION));
     }
@@ -172,5 +176,11 @@ public class MainActivity extends AppCompatActivity {
             RootTripTracking.getInstance().setSuppressAutoActivation(true);
             uiStateManager.setReactivateOnStart(false);
         }
+    }
+
+    private void permissionCheck() {
+        PermissionCheck check = RootTripTracking.getInstance().tripTrackingPermissionsCheck(this);
+        logManager.addToLog(String.format("Authorized permissions: %s", check.getAuthorizedPermissions().toString()));
+        logManager.addToLog(String.format("Unauthorized permissions: %s", check.getUnauthorizedPermissions().toString()));
     }
 }
