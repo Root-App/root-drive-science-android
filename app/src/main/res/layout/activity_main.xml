@@ -27,10 +27,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:height="50dp"
         android:gravity="center"
         android:lineSpacingMultiplier="1.2"
+        android:text="Active Driver"
         android:textIsSelectable="true"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,11 +41,10 @@
     <EditText
         android:id="@+id/eventLog"
         android:layout_width="360dp"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="8dp"
         android:background="#FFFFFF"
         android:backgroundTint="#FFFFFF"
         android:duplicateParentState="false"
@@ -57,11 +57,12 @@
         android:scrollbars="vertical"
         android:singleLine="false"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/tripTrackerVersion"
+        app:layout_constraintBottom_toTopOf="@+id/tripTrackerVersion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/clearOrRegisterDriver" />
+        app:layout_constraintTop_toBottomOf="@+id/tripTrackingReactivate"
+        app:layout_constraintVertical_bias="0.73" />
 
     <Button
         android:id="@+id/clearLog"
@@ -86,13 +87,12 @@
         android:id="@+id/tripTrackerVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
+        android:text="trip tracker version"
         android:textIsSelectable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventLog" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/driverIdInput"
@@ -124,11 +124,10 @@
         android:id="@+id/driverIdInputLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
         android:text="@string/driver_id_input_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/activeDriverId" />
 
     <Switch
         android:id="@+id/tripTrackingActivation"
@@ -155,11 +154,11 @@
     <Button
         android:id="@+id/permissionsCheckBtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_height="40dp"
         android:text="Check Permissions"
-        app:layout_constraintEnd_toEndOf="@+id/tripTrackingReactivate"
-        app:layout_constraintStart_toStartOf="@+id/tripTrackingReactivate"
-        app:layout_constraintTop_toBottomOf="@+id/tripTrackingReactivate" />
+        app:layout_constraintBottom_toBottomOf="@+id/copyLog"
+        app:layout_constraintEnd_toStartOf="@+id/copyLog"
+        app:layout_constraintStart_toStartOf="@+id/eventLog"
+        app:layout_constraintTop_toTopOf="@+id/copyLog" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
