@@ -152,4 +152,14 @@
         app:layout_constraintEnd_toEndOf="@id/clearOrRegisterDriver"
         app:layout_constraintTop_toBottomOf="@id/tripTrackingActivation" />
 
+    <Button
+        android:id="@+id/permissionsCheckBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Check Permissions"
+        app:layout_constraintEnd_toEndOf="@+id/tripTrackingReactivate"
+        app:layout_constraintStart_toStartOf="@+id/tripTrackingReactivate"
+        app:layout_constraintTop_toBottomOf="@+id/tripTrackingReactivate" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
