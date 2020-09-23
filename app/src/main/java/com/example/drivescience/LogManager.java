@@ -8,11 +8,14 @@ import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.time.LocalDateTime;
+import androidx.room.Room;
+
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
 
 public class LogManager {
-
+    private AppDatabase db;
     private ClipboardManager clipboard;
     private TextView eventLog;
 
@@ -20,13 +23,30 @@ public class LogManager {
         this.eventLog = eventLog;
         this.eventLog.setMovementMethod(new ScrollingMovementMethod());
         this.clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        this.db = Room.databaseBuilder(context, AppDatabase.class, "log-messages").allowMainThreadQueries().build();
+
+        List<LogMessage> existingMessages = db.logMessageDao().getAll();
+        for (LogMessage log : existingMessages)
+        {
+            displayLog(log);
+        }
     }
 
-    public void addToLog(String string) {
-        LocalDateTime datetime = LocalDateTime.now();
+    private LogMessage storeLog(String string)
+    {
+        Date date = new Date();
+        LogMessage logMessage = new LogMessage();
+        logMessage.date = date;
+        logMessage.message = string;
+        db.logMessageDao().insert(logMessage);
+        return logMessage;
+    }
+
+    private void displayLog(LogMessage logMessage)
+    {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLL HH:mm:ss");
-        String dateText = datetime.format(formatter);
-        eventLog.setText(String.format("%s%s: %s\n", eventLog.getText(), dateText, string));
+        String dateText = logMessage.date.toString();
+        eventLog.setText(String.format("%s%s: %s\n", eventLog.getText(), dateText, logMessage.message));
 
         final Layout layout = eventLog.getLayout();
         if(layout != null){
@@ -37,8 +57,14 @@ public class LogManager {
         }
     }
 
+    public void addToLog(String string) {
+        LogMessage log = storeLog(string);
+        displayLog(log);
+    }
+
     public void clearLog() {
         eventLog.setText("");
+        db.logMessageDao().deleteAll();
     }
 
     public void copyLogToClipboard(Context context) {
