@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
         intent.setData(Uri.parse("package:" + this.getPackageName()));
+
         this.startActivityForResult(intent, 100, null);
     }
 
@@ -68,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
         uiStateManager = new UIStateManager(
                 sharedPreferencesManager,
                 findViewById(R.id.activeDriverId),
-                findViewById(R.id.driverIdInput),
-                findViewById(R.id.clearOrRegisterDriver),
-                findViewById(R.id.tripTrackingActivation),
-                findViewById(R.id.tripTrackingReactivate)
+                driverIdInput,
+                clearOrRegisterDriver,
+                tripTrackingActivation,
+                tripTrackingReactivate
         );
 
         initializeTripTrackerAndSetButtonState();
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         checkPermissions.setOnClickListener(view -> permissionCheck());
 
         tripTrackerVersion.setText(String.format("Trip Tracker version: %s-%s", BuildConfig.FLAVOR, com.joinroot.roottriptracking.BuildConfig.SDK_VERSION));
+
+        startService(new Intent(this, OnClearFromRecentService.class));
     }
 
     private void initializeTripTrackerAndSetButtonState() {
