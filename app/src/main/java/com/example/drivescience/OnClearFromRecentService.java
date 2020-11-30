@@ -29,7 +29,6 @@ public class OnClearFromRecentService extends Service {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.cancel(NOTIFICATION_ID);
 
-        createNotification();
         return START_NOT_STICKY;
     }
 
