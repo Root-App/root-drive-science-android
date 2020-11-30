@@ -16,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat;
 public class OnClearFromRecentService extends Service {
 
     static int NOTIFICATION_ID = 1236;
+    static String NOTIFICATION_CHANNEL_ID = "on_clear_from_recents_channel";
 
     @Nullable
     @Override
@@ -46,7 +47,7 @@ public class OnClearFromRecentService extends Service {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1234")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_driving_notification)
                 .setContentTitle("Cannot track trips!")
                 .setContentText("App has been killed, can no longer track trips. Re-open the app to allow for trip tracking")
@@ -64,7 +65,7 @@ public class OnClearFromRecentService extends Service {
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("on_clear_from_recents_channel", "TripTracker availabilty channel", importance);
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "TripTracker availabilty channel", importance);
             channel.setDescription("Add Notification if OnClearFromRecentService is removed");
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
