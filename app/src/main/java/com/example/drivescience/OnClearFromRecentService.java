@@ -48,8 +48,8 @@ public class OnClearFromRecentService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_driving_notification)
-                .setContentTitle("Cannot track trips!")
-                .setContentText("App has been killed, can no longer track trips. Re-open the app to allow for trip tracking")
+                .setContentTitle("App removed from recents!")
+                .setContentText("App has been removed from the recents menu, trip tracking may not behave as expected!")
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
